@@ -1,8 +1,8 @@
 import { useSetRecoilState } from 'recoil';
 
-import { modalAtom } from '@recoil/modal.atom'
+import { modalAtom } from '@/common/recoil/modal.atom'
 
-import { Modal } from '@recoil/modal.atom';
+import { Modal } from '@/common/recoil/modal.atom';
 
 const useModal = () => {
 
