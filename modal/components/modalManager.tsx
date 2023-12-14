@@ -7,7 +7,7 @@ import { modalAtom } from "../recoil/modal.atom";
 import { motion, AnimatePresence } from "framer-motion";
 import { bgAnimation, modalAnimation } from "../animations/modalAnimation";
 
-const modalManager = () => {
+const ModalManager = () => {
   const [portalNode, setPortalNode] = useState<HTMLElement | null>(null);
 
   const [{ opened, modal }, setModal] = useRecoilState(modalAtom);
@@ -51,4 +51,4 @@ const modalManager = () => {
   );
 };
 
-export default modalManager;
+export default ModalManager;
