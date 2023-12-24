@@ -38,7 +38,7 @@ export interface Move {
 }
 
 export type Room = {
-    userMoves: Map<string, Move[]>;
+    usersMoves: Map<string, Move[]>;
     drawed: Move[];
     users: Map<string, string>;
 }
@@ -50,7 +50,7 @@ export interface User {
 
 export interface clientRoom {
     id: string;
-    userMoves: Map<string, Move[]>;
+    usersMoves: Map<string, Move[]>;
     movesWithoutUser: Move[];
     myMoves: Move[];
     users: Map<string, User>; 
