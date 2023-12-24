@@ -24,7 +24,7 @@ nextApp.prepare().then(() => {
     const rooms = new Map();
   
     const addMove = (roomId: string, socketId: string, move: Move) => {
-        const room = rooms.get(roomId);
+        const room = rooms.get(roomId)!;
 
         if(!room.users.has(socketId)) {
             room.usersMoves.set(socketId, [move]);
@@ -33,4 +33,11 @@ nextApp.prepare().then(() => {
         room.userMoves.get(socketId)!.push(move);
     }
 
+    const undoMove = (roomId: string, socketId: string) => {
+        const room = rooms.get(roomId)!;
+
+        room.userMoves.get(socketId)!.pop();
+
+
+    }
 })
