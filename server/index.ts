@@ -131,21 +131,59 @@ users: A Map containing the current user's socket ID mapped to their username. *
       }
     });
 
-    socket.on('join_room', (roomId, username) => {
-        const room = rooms.get(roomId);
+    // Listen for a 'join_room' event on the socket
+    /*The code listens for a 'join_room' event on the socket. This event is expected to carry two parameters - roomId (the ID of the room the user wants to join) and username (the username associated with the user) */
+    socket.on("join_room", (roomId, username) => {
+      // Retrieve the room object associated with the provided 'roomId' from the 'rooms' data structure
+      const room = rooms.get(roomId);
 
-        if(room && room.users.size < 12) {
-            socket.join(roomId);
+      // Check if the room exists and if it has fewer than 12 users
+      if (room && room.users.size < 12) {
+        // If the conditions are met, make the socket join the specified room
+        socket.join(roomId);
 
-            room.users.set(socket.id, username);
-            room.usersMoves.set(socket.id, []);
+        // Update the 'users' Map in the 'room' object with the new user's information
+        room.users.set(socket.id, username);
 
-            io.to(socket.id).emit('joined', roomId);
-        } else io.to(socket.id).emit('joined', '', true);
-    })
+        // Initialize an empty array for the user's moves (assuming 'room.usersMoves' is a Map)
+        room.usersMoves.set(socket.id, []);
 
+        // Emit a 'joined' event to the current socket with the 'roomId' as a confirmation
+        io.to(socket.id).emit("joined", roomId);
+      } else {
+        // If the room doesn't exist or has reached its user limit, emit a 'joined' event with an empty 'roomId'
+        // and a boolean 'true' indicating that the join operation failed
+        io.to(socket.id).emit("joined", "", true);
+      }
+    });
 
+    /*The code listens for a 'joined_room' event on the socket. This event is likely triggered after a successful room join operation */
+    socket.on("joined_room", () => {
+      /*It calls the getRoomId function to obtain the current roomId. This function determines the room ID that the socket has joined based on its presence in multiple rooms (as indicated by socket.rooms). */
+      const roomId = getRoomId();
 
+      /* The code then retrieves the room object associated with the obtained roomId from the rooms data structure. If the room doesn't exist, it exits the function, indicating that something went wrong */
+      const room = rooms.get(roomId);
+      if (!room) return;
+
+      /*It emits a 'room' event to the current socket. This event includes information about the room (room), the user moves (room.usersMoves), and the users in the room (room.users). The information is serialized into JSON format before sending */
+      /*room, room.usersMoves, room.users are all objects and JSON.stringify to convert them into JSON strings before sending them to the client. We can use JSON.parse to convert these strings back into Javascript objects on the client side */
+      io.to(socket.id).emit(
+        "room",
+        room,
+        JSON.stringify([...room.usersMoves]),
+        JSON.stringify([...room.users])
+      );
+
+      /*It broadcasts a 'new_user' event to all sockets in the room (except the current socket). This event includes the socket ID of the new user (socket.id) and their username (room.users.get(socket.id) || 'Anonymous'). The username is retrieved from the room.users Map, and if not found, a default value of 'Anonymous' is used */
+      /*In the socket.broadcast.to(roomId).emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous"); line, socket.broadcast is used to broadcast an event to all sockets in the given room except the current socket.
+The .to(roomId) part specifies the room to which the broadcast should be sent. Only the sockets in that room will receive the broadcasted event.
+The socket.id is excluded from receiving the broadcast because the socket.broadcast method excludes the current socket that initiated the event. The event is emitted to all other sockets in the specified room.
+This mechanism ensures that the information about the new user is sent to all other users in the room except the user who just joined (socket.id). The new user is identified by their socket ID (socket.id), and their username is retrieved from room.users.get(socket.id) || "Anonymous". If the username is not found, a default value of 'Anonymous' is used. */
+      socket.broadcast
+        .to(roomId)
+        .emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous");
+    });
   });
 });
 
