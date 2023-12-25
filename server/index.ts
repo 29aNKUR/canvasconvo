@@ -177,12 +177,22 @@ users: A Map containing the current user's socket ID mapped to their username. *
 
       /*It broadcasts a 'new_user' event to all sockets in the room (except the current socket). This event includes the socket ID of the new user (socket.id) and their username (room.users.get(socket.id) || 'Anonymous'). The username is retrieved from the room.users Map, and if not found, a default value of 'Anonymous' is used */
       /*In the socket.broadcast.to(roomId).emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous"); line, socket.broadcast is used to broadcast an event to all sockets in the given room except the current socket.
-The .to(roomId) part specifies the room to which the broadcast should be sent. Only the sockets in that room will receive the broadcasted event.
-The socket.id is excluded from receiving the broadcast because the socket.broadcast method excludes the current socket that initiated the event. The event is emitted to all other sockets in the specified room.
-This mechanism ensures that the information about the new user is sent to all other users in the room except the user who just joined (socket.id). The new user is identified by their socket ID (socket.id), and their username is retrieved from room.users.get(socket.id) || "Anonymous". If the username is not found, a default value of 'Anonymous' is used. */
+        The .to(roomId) part specifies the room to which the broadcast should be sent. Only the sockets in that room will receive the broadcasted event.
+        The socket.id is excluded from receiving the broadcast because the socket.broadcast method excludes the current socket that initiated the event. The event is emitted to all other sockets in the specified room.
+        This mechanism ensures that the information about the new user is sent to all other users in the room except the user who just joined (socket.id). The new user is identified by their socket ID (socket.id), and their username is retrieved from room.users.get(socket.id) || "Anonymous". If the username is not found, a default value of 'Anonymous' is used. */
       socket.broadcast
         .to(roomId)
         .emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous");
+    });
+
+
+    socket.on("leave_room", () => {
+      const roomId = getRoomId();
+      leaveRoom(roomId, socket.id);
+
+      /*After leaving the room, the code emits a 'user_disconnected' event to all sockets in the room using io.to(roomId).emit('user_disconnected', socket.id).
+        This event likely informs other users in the same room that a specific user (socket.id) has disconnected/left the room. The client-side code can then handle this event and update the UI accordingly, such as removing the disconnected user from the user list */
+      io.to(roomId).emit("user_disconnected", socket.id);
     });
   });
 });
