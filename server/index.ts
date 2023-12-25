@@ -120,20 +120,32 @@ users: A Map containing the current user's socket ID mapped to their username. *
     });
 
     // Listen for a 'check_room' event on the socket
-    socket.on('check_room', (roomId) => {
-        // Check if the 'rooms' object has a key matching the provided 'roomId'
-        if(rooms.has(roomId)) {
-                // If the room exists, emit a 'room_exists' event with the value 'true' to the current socket
-        socket.emit('room_exists', true);
-        }
-     
-        else {
-            // If the room does not exist, emit a 'room_exists' event with the value 'false' to the current socket
-            socket.emit('room_exists', false);
-        }
+    socket.on("check_room", (roomId) => {
+      // Check if the 'rooms' object has a key matching the provided 'roomId'
+      if (rooms.has(roomId)) {
+        // If the room exists, emit a 'room_exists' event with the value 'true' to the current socket
+        socket.emit("room_exists", true);
+      } else {
+        // If the room does not exist, emit a 'room_exists' event with the value 'false' to the current socket
+        socket.emit("room_exists", false);
+      }
+    });
+
+    socket.on('join_room', (roomId, username) => {
+        const room = rooms.get(roomId);
+
+        if(room && room.users.size < 12) {
+            socket.join(roomId);
+
+            room.users.set(socket.id, username);
+            room.usersMoves.set(socket.id, []);
+
+            io.to(socket.id).emit('joined', roomId);
+        } else io.to(socket.id).emit('joined', '', true);
     })
 
-    
+
+
   });
 });
 
