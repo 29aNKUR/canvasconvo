@@ -118,6 +118,22 @@ users: A Map containing the current user's socket ID mapped to their username. *
       /*The io.to(socket.id).emit('created', roomId) emits a 'created' event to the current user, providing them with the newly created roomId. This allows the client to know the ID of the room they have just created. */
       io.to(socket.id).emit("created", roomId);
     });
+
+    // Listen for a 'check_room' event on the socket
+    socket.on('check_room', (roomId) => {
+        // Check if the 'rooms' object has a key matching the provided 'roomId'
+        if(rooms.has(roomId)) {
+                // If the room exists, emit a 'room_exists' event with the value 'true' to the current socket
+        socket.emit('room_exists', true);
+        }
+     
+        else {
+            // If the room does not exist, emit a 'room_exists' event with the value 'false' to the current socket
+            socket.emit('room_exists', false);
+        }
+    })
+
+    
   });
 });
 
