@@ -33,7 +33,7 @@ export interface Move {
     };
     path: [number, number][];
     options: CtxOptions;
-    timeStamp: number;
+    timestamp: number;
     id: string; 
 }
 

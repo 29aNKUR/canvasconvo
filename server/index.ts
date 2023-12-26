@@ -185,7 +185,6 @@ users: A Map containing the current user's socket ID mapped to their username. *
         .emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous");
     });
 
-
     socket.on("leave_room", () => {
       const roomId = getRoomId();
       leaveRoom(roomId, socket.id);
@@ -193,6 +192,31 @@ users: A Map containing the current user's socket ID mapped to their username. *
       /*After leaving the room, the code emits a 'user_disconnected' event to all sockets in the room using io.to(roomId).emit('user_disconnected', socket.id).
         This event likely informs other users in the same room that a specific user (socket.id) has disconnected/left the room. The client-side code can then handle this event and update the UI accordingly, such as removing the disconnected user from the user list */
       io.to(roomId).emit("user_disconnected", socket.id);
+    });
+
+    // Listen for the 'draw' event from a client
+    //this code handles a drawing event from a client, generates a unique identifier for the move, stores the move information on the server, and then broadcasts the move to all other users in the same room, providing real-time updates to the clients
+    socket.on("draw", (move) => {
+      // Get the room ID associated with the current socket connection
+      const roomId = getRoomId();
+
+      // Get the current timestamp
+      const timestamp = Date.now();
+
+      // Generate a unique ID for the move using the v4 function
+      move.id = v4();
+
+      // Add the move information to the server's data store (not provided in the code snippet)
+      addMove(roomId, socket.id, { ...move, timestamp });
+
+      // Emit an event to the current socket (the user who initiated the draw event)
+      //This line emits a custom event 'your_move' to the current socket (user) with the drawing move information. This allows the user who initiated the draw event to receive real-time feedback about their own move.
+      io.to(socket.id).emit("your_move", { ...move, timestamp });
+
+      //This line broadcasts the drawing move to all other sockets in the same room (roomId) using socket.broadcast.to(roomId). The event 'user_draw' is emitted, and it includes the drawing move information and timestamp. The last parameter, socket.id, is likely used to identify which user made the drawing move and can be used for various purposes in the client-side code.
+      socket.broadcast
+        .to(roomId)
+        .emit("user_draw", { ...move, timestamp }, socket.id);
     });
   });
 });
