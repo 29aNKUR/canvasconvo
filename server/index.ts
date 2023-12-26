@@ -218,6 +218,47 @@ users: A Map containing the current user's socket ID mapped to their username. *
         .to(roomId)
         .emit("user_draw", { ...move, timestamp }, socket.id);
     });
+
+    // Listen for the 'undo' event from a client
+    socket.on("undo", () => {
+      const roomId = getRoomId();
+
+      // Call the undoMove function to handle undoing a move
+      undoMove(roomId, socket.id);
+
+      // Broadcast an 'user_undo' event to all other sockets in the same room
+      socket.broadcast.to(roomId).emit("user_undo", socket.id);
+    });
+
+    // Listen for the 'mouse_move' event from a client
+    // /This section listens for the 'mouse_move' event, which is likely triggered by a client when a mouse movement occurs. It then broadcasts a 'mouse_moved' event to all other sockets in the same room, relaying the new mouse coordinates (x, y) and the socket ID of the client that initiated the event
+    socket.on("mouse_move", (x, y) => {
+      socket.broadcast.to(getRoomId()).emit("mouse_moved", x, y, socket.id);
+    });
+
+    // Listen for the 'send_msg' event from a client
+    socket.on("send_msg", (msg) => {
+       // Broadcast a 'new_msg' event to all sockets in the same room
+      io.to(getRoomId()).emit("new_msg", socket.id, msg);
+    });
+
+    // Listen for the 'disconnecting' event when a client is about to disconnect
+    socket.on("disconnecting", () => {
+      const roomId = getRoomId();
+
+        // Call the leaveRoom function to handle the user leaving the room
+      leaveRoom(roomId, socket.id);
+
+      // Broadcast a 'user_disconnected' event to all sockets in the same room
+      io.to(roomId).emit("user_disconnected", socket.id);
+    });
+  });
+
+  // the app.all("*", (req, res) => nextHandler(req, res)); code creates a route that matches any HTTP method and any path. When a request matches this route, the nextHandler function is called to handle the request and send a response. This catch-all route is often used for scenarios where you want to define a default behavior for any unmatched routes or perform some common tasks for all incoming requests.
+  app.all("*", (req: any, res: any) => nextHandler(req, res));
+
+  server.listen(port, () => {
+    console.log(`> Ready on http://localhost:${port}`);
   });
 });
 
