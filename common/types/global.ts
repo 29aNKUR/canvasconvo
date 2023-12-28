@@ -48,7 +48,7 @@ export interface User {
     color: string;
 }
 
-export interface clientRoom {
+export interface ClientRoom {
     id: string;
     usersMoves: Map<string, Move[]>;
     movesWithoutUser: Move[];
