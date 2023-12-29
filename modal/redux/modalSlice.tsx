@@ -14,18 +14,13 @@ export const modalSlice = createSlice({
     name: 'modal',
     initialState,
     reducers: {
-        setModal: (state, action: PayloadAction<JSX.Element | JSX.Element[]>) => {
-            state.modal = action.payload;
-            state.opened = true;
-        },
-
-        closeModal: (state) => {
-            state.modal = <></>;
-            state.opened = false;
+        setModal: (state, action) => {
+            state.modal = action.payload.modal;
+            state.opened = action.payload.opened;
         }
     }
 })
 
-export const { setModal, closeModal } = modalSlice.actions;
+export const { setModal } = modalSlice.actions;
 
 export default modalSlice.reducer;
