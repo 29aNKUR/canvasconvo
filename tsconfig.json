@@ -15,7 +15,7 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
-      "@recoil/*": ["common/recoil/*"],
+      "@recoil/*": ["common/redux/*"],
       "@/*": ["*"]
     }
   },
