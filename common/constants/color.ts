@@ -12,5 +12,7 @@ export const COLORS = {
     ORANGE: '#FF7300',
 };
 
+//creating a new array COLORS_ARRAY with the values of COLORS object
+//console.log(COLORS_ARRAY) will give values in array
 export const COLORS_ARRAY = [...Object.values(COLORS)];
 
