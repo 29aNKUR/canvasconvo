@@ -3,7 +3,7 @@
 import Portal from "@/common/components/portal/portal";
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { modalAtom } from "../redux/modalSlice";
+import { modalAtom } from "../recoil/modal.atom";
 import { motion, AnimatePresence } from "framer-motion";
 import { bgAnimation, modalAnimation } from "../animations/modalAnimation";
 
