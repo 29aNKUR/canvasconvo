@@ -13,6 +13,9 @@ export const optionSlice = createSlice({
     name: 'option',
     initialState,
     reducers: {
+        setOptions: (state,action) => {
+            return action.payload;
+        },
         setLineColor: (state,action) => {
             state.lineColor = action.payload;
         },
@@ -35,6 +38,7 @@ export const optionSlice = createSlice({
 });
 
 export const {
+    setOptions,
     setLineColor,
     setFillColor,
     setLineWidth,
