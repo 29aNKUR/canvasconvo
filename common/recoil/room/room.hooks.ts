@@ -1,7 +1,8 @@
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { DEFAULT_ROOM, roomAtom } from "./room.atom"
 import { getNextColor } from "@/common/lib/getNextColor";
 import { Move } from "@/common/types/global";
+
 
 //This hook provides read-only access to the current state of the roomAtom.
 export const useRoom = () => {
@@ -39,7 +40,7 @@ export const useSetUsers = () => {
             const newUsersMoves = prev.usersMoves;
 
             const color = getNextColor([...newUsers.values()].pop()?.color);
-            
+
             newUsers.set(userId, {
                 name,
                 color,
@@ -97,3 +98,31 @@ export const useSetUsers = () => {
     };
 };
  
+
+export const useMyMoves = () => {
+    const [room, setRoom] = useRecoilState(roomAtom);
+
+    const handleAddMyMove = (move: Move) => {
+        setRoom((prev) => {
+            if(prev.myMoves[prev.myMoves.length - 1]?.options.mode === 'select')
+            return {
+                ...prev,
+                myMoves: [...prev.myMoves.slice(0, prev.myMoves.length - 1), move],
+            };
+
+            return { ...prev, myMoves: [...prev.myMoves, move] };
+        
+        });
+    };
+
+    const handleRemoveMyMove = () => {
+        const newMoves = [...room.myMoves];
+        const move = newMoves.pop();
+
+        setRoom((prev) => ({ ...prev, myMoves: newMoves }));
+
+        return move;
+    };
+
+    return { handleAddMyMove, handleRemoveMyMove, myMoves: room.myMoves };
+}; 
