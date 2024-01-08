@@ -104,14 +104,16 @@ export const useMyMoves = () => {
 
     const handleAddMyMove = (move: Move) => {
         setRoom((prev) => {
-            if(prev.myMoves[prev.myMoves.length - 1]?.options.mode === 'select')
-            return {
-                ...prev,
-                myMoves: [...prev.myMoves.slice(0, prev.myMoves.length - 1), move],
-            };
-
-            return { ...prev, myMoves: [...prev.myMoves, move] };
-        
+            if(prev.myMoves[prev.myMoves.length - 1]?.options.mode === 'select') {
+                //if the condition is true(the last move's mode is select)
+                return {
+                    ...prev,
+                    myMoves: [...prev.myMoves.slice(0, prev.myMoves.length - 1), move],
+                };
+            } else {
+                //if the condition is false(the last move's mode is not select)
+                return { ...prev, myMoves: [...prev.myMoves, move] };
+            }              
         });
     };
 
