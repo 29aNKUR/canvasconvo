@@ -1,8 +1,9 @@
 import { socket } from '@/common/lib/socket';
 import { useModal } from '@/modal';
+import NotFoundModal from '@/modules/modals/NotFound';
 import { useSetRoomId } from '@recoil/room'
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 const NameInput = () => {
     const setRoomId = useSetRoomId();
@@ -20,7 +21,7 @@ const NameInput = () => {
 
         socket.on('room_exists', (exists) => {
             if(!exists) {
-                router.push("/");
+                router.push('/');
             }
         });
 
@@ -29,9 +30,26 @@ const NameInput = () => {
         };
     },[roomId, router]);
 
-    const handleJoinRoom = () => {
+    useEffect(() => {
+        const handleJoined = (roomIdFromServer: string, failed?: boolean) => {
+            if(failed) {
+                router.push('/');
+                openModal(<NotFoundModal id={roomIdFromServer} />);
+            } else setRoomId(roomIdFromServer);
+        };
 
-    }
+        socket.on('joined', handleJoined);
+
+        return () => {
+            socket.off('joined', handleJoined);
+        };
+    }, [openModal, router, setRoomId]);
+
+    const handleJoinRoom = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        socket.emit('join_room', roomId, name);
+    };
 
   return (
     <form
@@ -52,7 +70,7 @@ const NameInput = () => {
             id="room-id"
             placeholder='Username...'
             value={name}
-            onChange={(e) => setTokenSourceMapRange(e.target.value.slice(0,15))}
+            onChange={(e) => setName(e.target.value.slice(0,15))}
         />
     </div>
 
