@@ -4,6 +4,7 @@ const UserList = () => {
   const { users } = useRoom();
   return (
     <div>
+        {/* //a new array containing the keys of the users map */}
       {[...users.keys()].map((userId, index) => {
         return (
           <div
@@ -25,3 +26,9 @@ const UserList = () => {
 };
 
 export default UserList;
+
+// const users = new Map([
+//   ['userId1', { name: 'John', color: 'blue' }],
+//   ['userId2', { name: 'Alice', color: 'red' }],
+//   // ...
+// ]);

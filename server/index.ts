@@ -23,7 +23,7 @@ nextApp.prepare().then(() => {
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 
-  app.get("/hello", async (_, res) => {
+  app.get('/hello', async (_, res) => {
     res.send("hello world");
   });
 
@@ -55,7 +55,7 @@ nextApp.prepare().then(() => {
   };
 
   //Socket.IO Connection Event Handling
-  io.on("connection", (socket) => {
+  io.on('connection', (socket) => {
     /*getRoomId is a function defined within the connection event. It is responsible for determining the room identifier associated with the current socket. */
     const getRoomId = () => {
       /*socket.rooms is a Set-like object containing the unique identifiers (room IDs) of all the rooms the socket is currently in.
@@ -90,7 +90,7 @@ nextApp.prepare().then(() => {
     };
 
     //'create_room' Event Handling
-    socket.on("create_room", (username) => {
+    socket.on('create_room', (username) => {
       // Generate a unique room ID
       let roomId: string;
       /*The do-while loop generates a random string (roomId) using Math.random() and toString(36) functions. The substring(2, 6) extracts a portion of the string, creating a short identifier.
@@ -116,24 +116,24 @@ users: A Map containing the current user's socket ID mapped to their username. *
 
       //Emit a 'created' event
       /*The io.to(socket.id).emit('created', roomId) emits a 'created' event to the current user, providing them with the newly created roomId. This allows the client to know the ID of the room they have just created. */
-      io.to(socket.id).emit("created", roomId);
+      io.to(socket.id).emit('created', roomId);
     });
 
     // Listen for a 'check_room' event on the socket
-    socket.on("check_room", (roomId) => {
+    socket.on('check_room', (roomId) => {
       // Check if the 'rooms' object has a key matching the provided 'roomId'
       if (rooms.has(roomId)) {
         // If the room exists, emit a 'room_exists' event with the value 'true' to the current socket
-        socket.emit("room_exists", true);
+        socket.emit('room_exists', true);
       } else {
         // If the room does not exist, emit a 'room_exists' event with the value 'false' to the current socket
-        socket.emit("room_exists", false);
+        socket.emit('room_exists', false);
       }
     });
 
     // Listen for a 'join_room' event on the socket
     /*The code listens for a 'join_room' event on the socket. This event is expected to carry two parameters - roomId (the ID of the room the user wants to join) and username (the username associated with the user) */
-    socket.on("join_room", (roomId, username) => {
+    socket.on('join_room', (roomId, username) => {
       // Retrieve the room object associated with the provided 'roomId' from the 'rooms' data structure
       const room = rooms.get(roomId);
 
@@ -149,16 +149,16 @@ users: A Map containing the current user's socket ID mapped to their username. *
         room.usersMoves.set(socket.id, []);
 
         // Emit a 'joined' event to the current socket with the 'roomId' as a confirmation
-        io.to(socket.id).emit("joined", roomId);
+        io.to(socket.id).emit('joined', roomId);
       } else {
         // If the room doesn't exist or has reached its user limit, emit a 'joined' event with an empty 'roomId'
         // and a boolean 'true' indicating that the join operation failed
-        io.to(socket.id).emit("joined", "", true);
+        io.to(socket.id).emit('joined', "", true);
       }
     });
 
     /*The code listens for a 'joined_room' event on the socket. This event is likely triggered after a successful room join operation */
-    socket.on("joined_room", () => {
+    socket.on('joined_room', () => {
       /*It calls the getRoomId function to obtain the current roomId. This function determines the room ID that the socket has joined based on its presence in multiple rooms (as indicated by socket.rooms). */
       const roomId = getRoomId();
 
@@ -169,7 +169,7 @@ users: A Map containing the current user's socket ID mapped to their username. *
       /*It emits a 'room' event to the current socket. This event includes information about the room (room), the user moves (room.usersMoves), and the users in the room (room.users). The information is serialized into JSON format before sending */
       /*room, room.usersMoves, room.users are all objects and JSON.stringify to convert them into JSON strings before sending them to the client. We can use JSON.parse to convert these strings back into Javascript objects on the client side */
       io.to(socket.id).emit(
-        "room",
+        'room',
         room,
         JSON.stringify([...room.usersMoves]),
         JSON.stringify([...room.users])
@@ -182,21 +182,21 @@ users: A Map containing the current user's socket ID mapped to their username. *
         This mechanism ensures that the information about the new user is sent to all other users in the room except the user who just joined (socket.id). The new user is identified by their socket ID (socket.id), and their username is retrieved from room.users.get(socket.id) || "Anonymous". If the username is not found, a default value of 'Anonymous' is used. */
       socket.broadcast
         .to(roomId)
-        .emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous");
+        .emit('new_user', socket.id, room.users.get(socket.id) || 'Anonymous');
     });
 
-    socket.on("leave_room", () => {
+    socket.on('leave_room', () => {
       const roomId = getRoomId();
       leaveRoom(roomId, socket.id);
 
       /*After leaving the room, the code emits a 'user_disconnected' event to all sockets in the room using io.to(roomId).emit('user_disconnected', socket.id).
         This event likely informs other users in the same room that a specific user (socket.id) has disconnected/left the room. The client-side code can then handle this event and update the UI accordingly, such as removing the disconnected user from the user list */
-      io.to(roomId).emit("user_disconnected", socket.id);
+      io.to(roomId).emit('user_disconnected', socket.id);
     });
 
     // Listen for the 'draw' event from a client
     //this code handles a drawing event from a client, generates a unique identifier for the move, stores the move information on the server, and then broadcasts the move to all other users in the same room, providing real-time updates to the clients
-    socket.on("draw", (move) => {
+    socket.on('draw', (move) => {
       // Get the room ID associated with the current socket connection
       const roomId = getRoomId();
 
@@ -211,51 +211,51 @@ users: A Map containing the current user's socket ID mapped to their username. *
 
       // Emit an event to the current socket (the user who initiated the draw event)
       //This line emits a custom event 'your_move' to the current socket (user) with the drawing move information. This allows the user who initiated the draw event to receive real-time feedback about their own move.
-      io.to(socket.id).emit("your_move", { ...move, timestamp });
+      io.to(socket.id).emit('your_move', { ...move, timestamp });
 
       //This line broadcasts the drawing move to all other sockets in the same room (roomId) using socket.broadcast.to(roomId). The event 'user_draw' is emitted, and it includes the drawing move information and timestamp. The last parameter, socket.id, is likely used to identify which user made the drawing move and can be used for various purposes in the client-side code.
       socket.broadcast
         .to(roomId)
-        .emit("user_draw", { ...move, timestamp }, socket.id);
+        .emit('user_draw', { ...move, timestamp }, socket.id);
     });
 
     // Listen for the 'undo' event from a client
-    socket.on("undo", () => {
+    socket.on('undo', () => {
       const roomId = getRoomId();
 
       // Call the undoMove function to handle undoing a move
       undoMove(roomId, socket.id);
 
       // Broadcast an 'user_undo' event to all other sockets in the same room
-      socket.broadcast.to(roomId).emit("user_undo", socket.id);
+      socket.broadcast.to(roomId).emit('user_undo', socket.id);
     });
 
     // Listen for the 'mouse_move' event from a client
     // /This section listens for the 'mouse_move' event, which is likely triggered by a client when a mouse movement occurs. It then broadcasts a 'mouse_moved' event to all other sockets in the same room, relaying the new mouse coordinates (x, y) and the socket ID of the client that initiated the event
-    socket.on("mouse_move", (x, y) => {
-      socket.broadcast.to(getRoomId()).emit("mouse_moved", x, y, socket.id);
+    socket.on('mouse_move', (x, y) => {
+      socket.broadcast.to(getRoomId()).emit('mouse_moved', x, y, socket.id);
     });
 
     // Listen for the 'send_msg' event from a client
-    socket.on("send_msg", (msg) => {
+    socket.on('send_msg', (msg) => {
        // Broadcast a 'new_msg' event to all sockets in the same room
-      io.to(getRoomId()).emit("new_msg", socket.id, msg);
+      io.to(getRoomId()).emit('new_msg', socket.id, msg);
     });
 
     // Listen for the 'disconnecting' event when a client is about to disconnect
-    socket.on("disconnecting", () => {
+    socket.on('disconnecting', () => {
       const roomId = getRoomId();
 
         // Call the leaveRoom function to handle the user leaving the room
       leaveRoom(roomId, socket.id);
 
       // Broadcast a 'user_disconnected' event to all sockets in the same room
-      io.to(roomId).emit("user_disconnected", socket.id);
+      io.to(roomId).emit('user_disconnected', socket.id);
     });
   });
 
   // the app.all("*", (req, res) => nextHandler(req, res)); code creates a route that matches any HTTP method and any path. When a request matches this route, the nextHandler function is called to handle the request and send a response. This catch-all route is often used for scenarios where you want to define a default behavior for any unmatched routes or perform some common tasks for all incoming requests.
-  app.all("*", (req: any, res: any) => nextHandler(req, res));
+  app.all('*', (req: any, res: any) => nextHandler(req, res));
 
   server.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
