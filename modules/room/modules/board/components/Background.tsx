@@ -1,7 +1,8 @@
 import { CANVAS_SIZE } from "@/common/constants/canvasSize";
-import { useBackground } from "@recoil/background";
 import { motion } from "framer-motion";
 import { RefObject, useEffect } from "react";
+import { useBoardPosition } from "../hooks/useBoardPosition";
+import { useBackground } from "@/common/recoil/background";
 
 const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
 
