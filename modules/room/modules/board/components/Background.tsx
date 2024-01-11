@@ -16,11 +16,14 @@ const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
             ctx.fillStyle = mode === 'dark' ? '#222' : '#fff';
             ctx.fillRect(0, 0, CANVAS_SIZE.width, CANVAS_SIZE.height);
 
+            //for setting the entire webpage's color
             document.body.style.backgroundColor = mode === 'dark' ? '#222' : '#fff';
 
             if(lines) {
+                // Drawing grid lines
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = mode === 'dark' ? '#444' : '#ddd';
+                //for vertical lines
                 for (let i = 0; i < CANVAS_SIZE.height; i += 25) {
                     ctx.beginPath();
                     ctx.moveTo(0, i);
@@ -28,6 +31,7 @@ const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
                     ctx.stroke();
                 }
 
+                //for horizontal lines
                 for (let i = 0; i < CANVAS_SIZE.width; i += 25) {
                     ctx.beginPath();
                     ctx.moveTo(i, 0);
@@ -48,5 +52,7 @@ const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
         />
     );
 };
+
+
 
 export default Background;
