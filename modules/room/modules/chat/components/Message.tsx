@@ -13,7 +13,7 @@ const Message = ({ userId, msg, username, color }: MessageType) => {
                 {username}
             </h5>
         )}
-        <p style={{ wordBreak: 'break-all'}}>{msg}</p>
+        <p className="break-all">{msg}</p>
         </div>
     );
 };
