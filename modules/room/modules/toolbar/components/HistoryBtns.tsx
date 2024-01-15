@@ -11,14 +11,21 @@ const HistoryBtns = () => {
 
   return (
     <>
+      {/* disabled prop is used to control whether the buttons are clickable based on the availability of redo and undo actions */}
       <button
         className="btn-icon text-xl"
         ref={redoRef}
+        //moves saved to savedMoves atom if any
         disabled={!savedMoves.length}
       >
         <FaRedo />
       </button>
-      <button className="btn-icon text-xl" ref={undoRef} disabled={!myMoves.length}>
+      <button
+        className="btn-icon text-xl"
+        ref={undoRef}
+        //moves saved to myMoves using useMyMoves if any
+        disabled={!myMoves.length}
+      >
         <FaUndo />
       </button>
     </>
