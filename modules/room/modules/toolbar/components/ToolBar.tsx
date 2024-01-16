@@ -34,18 +34,21 @@ const ToolBar = () => {
 
     const handleExit = () => router.push('/');
 
+    // Event handler to download the canvas as an image
     const handleDownload = () => {
+
         const canvas = document.createElement('canvas');
         canvas.width = CANVAS_SIZE.width;
         canvas.height = CANVAS_SIZE.height;
 
+        // Drawing canvas and background onto the temporary canvas
         const tempCtx = canvas.getContext('2d');
-
         if(tempCtx && canvasRef.current && bgRef.current) {
             tempCtx.drawImage(bgRef.current, 0, 0);
             tempCtx.drawImage(canvasRef.current, 0, 0);
         }
 
+        // Creating a download link and triggering a click to initiate download
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png');
         link.download = 'canvas.png';
@@ -56,6 +59,7 @@ const ToolBar = () => {
 
     return (
         <>
+        {/* For adding animation on toolbar opening arrow */}
         <motion.button
             className="btn-icon absolute bottom-1/2 -left-2 z-50 h-10 w-10 rounded-full bg-black text-2xl transition-none lg:hidden"
             animate={{ rotate: opened ? 0 : 180}}
@@ -64,6 +68,8 @@ const ToolBar = () => {
         >
             <FiChevronRight />
         </motion.button>
+        {/* animation for toolbar */}
+
         <motion.div 
             className="absolute left-10 top-[50%] z-50 grid grid-cols-2 items-center gap-5 rounded-lg bg-zinc-900 p-5 text-white 2xl:grid-cols-1"
             animate={{
@@ -76,6 +82,7 @@ const ToolBar = () => {
             >
                 <HistoryBtns />
 
+                 {/* for horizontal lines below undo redo button */}
                 <div className="h-px w-full bg-white 2xl:hidden" />
                 <div className="h-px w-full bg-white"/>
 
@@ -85,7 +92,10 @@ const ToolBar = () => {
                 <ModePicker />
                 <ImagePicker />
 
+                {/* for black square space near imagepicker */}
                 <div className="2xl:hidden"></div>
+
+                 {/* horizontal lines */}
                 <div className="h-px w-full bg-white 2xl:hidden"></div>
                 <div className="h-px w-full bg-white"></div>
 
