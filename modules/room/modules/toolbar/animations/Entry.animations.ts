@@ -1,3 +1,4 @@
+//example: for linewidthpicker
 export const EntryAnimation = {
     from: {
         y: -30,
