@@ -86,9 +86,10 @@ export const useDraw = () => {
       return;
     }
 
-    switch (options.shape) {
-      
-    }
+    if(options.mode === 'select') {
+      ctx.fillStyle 'rgba(0, 0, 0, 0.2)';
+      drawRect(ctx, tempMoves[0], finalX, finalY, false, true);
+      }
   }
 
 }
