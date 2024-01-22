@@ -101,4 +101,77 @@ export const useDraw = () => {
 
   }
 
-}
+  const clearOnYourMove = () => {
+    drawAndSet();
+    tempImageData = undefined;
+  };
+
+  const handleEndDrawing = () => {
+    if(!ctx || blocked) return;
+
+    setDrawing(false);
+
+    ctx.closePath();
+
+    let addMove = true;
+    if( options.mode === 'select' && tempMoves.length) {
+      clearOnYourMove();
+      let x = tempMoves[0][0];
+      let y = tempMoves[0][1];
+      let width = tempMoves[tempMoves.length - 1][0] - x;
+      let height = tempMoves[tempMoves.length -1][1] - y;
+
+      if(width < 0) {
+        width -= 4;
+        x += 2;
+      } else {
+        width += 4;
+        x -= 2;
+      }
+
+      if(height < 0) {
+        height -= 4;
+        y += 2;
+      } else {
+        height += 4;
+        y -= 2;
+      }
+
+      if( (width < 4 || width > 4) && ( height < 4 || height > 4))
+        setSelection({ x, y, width, height});
+      else {
+        clearSelection();
+        addMove = false;
+      }
+    }
+
+    const move: Move = {
+      ...DEFAULT_MOVE,
+      rect: {
+        ...tempSize,
+      },
+      circle: {
+        ...tempCircle,
+      },
+      path: tempMoves,
+      options,
+    };
+
+    tempmoves = [];
+    tempCircle = { cX: 0, cY: 0, radiusX: 0, radiusY: 0 };
+    tempSize = { width: 0, height: 0};
+
+    if (options.mode !== 'select' ) {
+      socket.emit('draw', move);
+      clearSavedMoves();
+    } else if(addMove) handleAddMyMove(move);
+  };
+
+  return {
+    handleEndDrawing,
+    handleDraw,
+    handleStartDrawing,
+    drawing,
+    clearOnYourMove,
+  };
+};
