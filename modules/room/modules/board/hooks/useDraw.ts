@@ -86,10 +86,19 @@ export const useDraw = () => {
       return;
     }
 
-    if(options.mode === 'select') {
-      ctx.fillStyle 'rgba(0, 0, 0, 0.2)';
-      drawRect(ctx, tempMoves[0], finalX, finalY, false, true);
-      }
+    if(options.shape === 'line') {
+      if(shift) tempMoves = tempMoves.slice(0,1);
+
+      drawLine(ctx, tempMoves[0], finalX, finalY, shift);
+
+      tempMoves.push([finalX, finalY]);
+    } else if( options.shape === 'circle') {
+      tempCircle = drawCircle(ctx, tempMoves[0], finalX, finalY, shift);
+    }
+    else if (options.shape === 'rect') {
+      tempSize =  drawRect(ctx, tempMoves[0], finalX, finalY, shift);
+    }
+
   }
 
 }
