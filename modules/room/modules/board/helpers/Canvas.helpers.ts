@@ -77,6 +77,26 @@ export const drawRect = (
     return { width, height };
 };
 
+export const drawLine = (
+    ctx: CanvasRenderingContext2D,
+    from: [number, number],
+    x: number,
+    y: number,
+    shift?: boolean
+) => {
+    if(shift) {
+        ctx.beginPath();
+        ctx.lineTo(from[0], from[1]);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.closePath();
+
+        return;
+    }
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
+};
 
 
 
