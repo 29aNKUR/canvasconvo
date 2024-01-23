@@ -52,4 +52,31 @@ export const drawCircle = (
     return { cX, cY, radiusX, radiusY };
 };
 
+export const drawRect = (
+    ctx: CanvasRenderingContext2D,
+    from: [number, number],
+    x: number,
+    y: number,
+    shift?: boolean,
+    fill?: boolean
+) => {
+    ctx.beginPath();
+
+    const { width, height } = getWidthAndHeight(x, y, from, shift);
+
+    if (fill) {
+        ctx.fillRect(from[0], from[1], width, height);
+    } else {
+        ctx.rect(from[0], from[1], width, height);
+    }
+
+    ctx.stroke();
+    ctx.fill();
+    ctx.closePath();
+
+    return { width, height };
+};
+
+
+
 
