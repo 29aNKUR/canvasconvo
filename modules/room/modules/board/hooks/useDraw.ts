@@ -8,6 +8,9 @@ import { useCtx } from "./useCtx";
 import { getStringFromRgba } from "@/common/lib/rgba";
 import { socket } from "@/common/lib/socket";
 import { drawCircle, drawLine, drawRect } from "../helpers/Canvas.helpers";
+import { Move } from "@/common/types/global";
+import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
+import { getPos } from "@/common/lib/getPos";
 
 let tempMoves: [number, number][] = [];
 let tempCircle = { cX: 0, cY: 0, radiusX: 0, radiusY: 0 };
@@ -159,7 +162,7 @@ export const useDraw = (blocked: boolean) => {
       options,
     };
 
-    tempmoves = [];
+    tempMoves = [];
     tempCircle = { cX: 0, cY: 0, radiusX: 0, radiusY: 0 };
     tempSize = { width: 0, height: 0};
 
