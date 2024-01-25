@@ -6,6 +6,8 @@ import { useViewportSize } from "@/common/hooks/useViewportSize";
 import { useState } from "react";
 import { useCtx } from "./useCtx";
 import { getStringFromRgba } from "@/common/lib/rgba";
+import { socket } from "@/common/lib/socket";
+import { drawCircle, drawLine, drawRect } from "../helpers/Canvas.helpers";
 
 let tempMoves: [number, number][] = [];
 let tempCircle = { cX: 0, cY: 0, radiusX: 0, radiusY: 0 };
@@ -13,7 +15,7 @@ let tempSize = { width: 0, height: 0};
 let tempImageData: ImageData | undefined;
 
 
-export const useDraw = () => {
+export const useDraw = (blocked: boolean) => {
   const options = useOptionsValue();
   const boardPosition = useBoardPosition();
   const { clearSavedMoves } = useSetSavedMoves();
