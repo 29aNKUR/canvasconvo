@@ -1,8 +1,9 @@
+//this code establishes a connection between the minimap and the main canvas, ensuring that changes in the minimap's position are reflected in the board position
 import { useViewportSize } from "@/common/hooks/useViewportSize";
 import { useRefs } from "@/modules/room/hooks/useRefs";
 import { useBoardPosition } from "../hooks/useBoardPosition";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useMotionValue } from 'framer-motion';
+import { motion, useMotionValue } from "framer-motion";
 import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 
 const MiniMap = ({ dragging }: { dragging: boolean }) => {
@@ -45,6 +46,7 @@ const MiniMap = ({ dragging }: { dragging: boolean }) => {
     return 20;
   }, [width]);
 
+  //to set the values of x and y on the main map based on minimap
   useEffect(() => {
     miniX.onChange((newX) => {
       if (!dragging) boardPos.x.set(Math.floor(-newX * divider));
@@ -74,6 +76,7 @@ const MiniMap = ({ dragging }: { dragging: boolean }) => {
         height={CANVAS_SIZE.height}
         className="h-full w-full"
       />
+      {/* to drage the red borders in minimap */}
       <motion.div
         drag
         dragConstraints={containerRef}
