@@ -1,5 +1,6 @@
 import { socket } from "@/common/lib/socket";
 import { useRoom } from "@/common/recoil/room";
+import UserMouse from "./UserMouse";
 
 
 const MousesRenderer = () => {
