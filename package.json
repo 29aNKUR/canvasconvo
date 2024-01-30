@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "nodemon server/index.ts",
+    "dev:client": "ts-node server/index.ts",
+    "build:server": "tsx --project tsconfig.server.json",
+    "build:next": "next build",
+    "build": "npm-run-all build:*",
+    "start": "NODE_ENV=production node build/server/index.js",
     "lint": "next lint"
   },
   "dependencies": {

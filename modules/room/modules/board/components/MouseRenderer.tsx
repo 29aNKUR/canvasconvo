@@ -15,3 +15,5 @@ const MousesRenderer = () => {
         </>
     )
 }
+
+export default MousesRenderer;

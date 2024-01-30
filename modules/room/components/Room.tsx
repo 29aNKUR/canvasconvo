@@ -1,6 +1,11 @@
-import { useRoom } from "@recoil/room";
+
+import { useRoom } from "@/common/recoil/room";
 import NameInput from "./NameInput";
 import UserList from "./UserList";
+import RoomContextProvider from "../context/Room.context";
+import ToolBar from "../modules/toolbar";
+import Board from "../modules/board";
+import Chat from "../modules/chat";
 
 const Room = () => {
   const room = useRoom();

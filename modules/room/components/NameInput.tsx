@@ -1,7 +1,7 @@
 import { socket } from '@/common/lib/socket';
+import { useSetRoomId } from '@/common/recoil/room';
 import { useModal } from '@/modal';
 import NotFoundModal from '@/modules/modals/NotFound';
-import { useSetRoomId } from '@recoil/room';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 

@@ -1,6 +1,6 @@
 import { DEFAULT_EASE } from "@/common/constants/easings";
 import { ModalManager } from "@/modal";
-import "@/styles/globals.css";
+import '@/common/styles/global.css'
 import { MotionConfig } from "framer-motion";
 import type { AppProps } from "next/app";
 import Head from "next/head";
