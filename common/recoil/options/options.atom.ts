@@ -1,50 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { atom } from 'recoil';
 
-const initialState = {
+import { CtxOptions } from '@/common/types/global';
+
+export const optionsAtom = atom<CtxOptions>({
+  key: 'options',
+  default: {
     lineColor: { r: 0, g: 0, b: 0, a: 1 },
     fillColor: { r: 0, g: 0, b: 0, a: 0 },
     lineWidth: 5,
     mode: 'draw',
     shape: 'line',
-    selection: null
-};
-
-export const optionSlice = createSlice({
-    name: 'option',
-    initialState,
-    reducers: {
-        setOptions: (state,action) => {
-            return action.payload;
-        },
-        setLineColor: (state,action) => {
-            state.lineColor = action.payload;
-        },
-        setFillColor: (state,action) => {
-            state.fillColor = action.payload;
-        },
-        setLineWidth: (state,action) => {
-            state.lineWidth = action.payload;
-        },
-        setMode: (state,action) => {
-            state.mode = action.payload;
-        },
-        setShape: (state,action) => {
-            state.shape = action.payload;
-        },
-        setSelection: (state,action) => {
-            state.selection = action.payload;
-        },
-    },
+    selection: null,
+  },
 });
-
-export const {
-    setOptions,
-    setLineColor,
-    setFillColor,
-    setLineWidth,
-    setMode,
-    setShape,
-    setSelection,
-} = optionSlice.actions;
-
-export default optionSlice.reducer;

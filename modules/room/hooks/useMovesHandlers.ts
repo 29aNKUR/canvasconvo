@@ -61,165 +61,166 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
   const drawMove = (move: Move, image?: HTMLImageElement) => {
     const { path } = move;
 
-    if(!ctx || !path.length) return;
+    if (!ctx || !path.length) return;
 
     const moveOptions = move.options;
 
-    if(moveOptions.mode === 'select') return;
+    if (moveOptions.mode === "select") return;
 
     ctx.lineWidth = moveOptions.lineWidth;
     ctx.strokeStyle = getStringFromRgba(moveOptions.lineColor);
     ctx.fillStyle = getStringFromRgba(moveOptions.fillColor);
 
-    if(moveOptions.mode === 'eraser') {
-        ctx.globalCompositeOperation = 'destination-out';
+    if (moveOptions.mode === "eraser") {
+      ctx.globalCompositeOperation = "destination-out";
     } else {
-        ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = "source-over";
     }
 
-    if(moveOptions.shape === 'image' && image) {
-        ctx.drawImage(image,path[0][0], path[0][1]);
+    if (moveOptions.shape === "image" && image) {
+      ctx.drawImage(image, path[0][0], path[0][1]);
     }
 
     switch (moveOptions.shape) {
-        case 'line' : {
-            ctx.beginPath();
-            path.forEach(([x, y]) => {
-                ctx.lineTo(x, y);
-            });
+      case "line": {
+        ctx.beginPath();
+        path.forEach(([x, y]) => {
+          ctx.lineTo(x, y);
+        });
 
-            ctx.stroke();
-            ctx.closePath();
-            break;
-        }
+        ctx.stroke();
+        ctx.closePath();
+        break;
+      }
 
-        case 'circle' : {
-            const { cX, cY, radiusX, radiusY } = move.circle;
+      case "circle": {
+        const { cX, cY, radiusX, radiusY } = move.circle;
 
-            ctx.beginPath();
-            ctx.ellipse(cX, cY, radiusX, radiusY, 0, 0, 2 * Math.PI);
-            ctx.stroke();
-            ctx.fill();
-            ctx.closePath();
-            break;
-        }
+        ctx.beginPath();
+        ctx.ellipse(cX, cY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+        break;
+      }
 
-        case 'rect' : {
-            const { width, height } = move.rect;
+      case "rect": {
+        const { width, height } = move.rect;
 
-            ctx.beginPath();
+        ctx.beginPath();
 
-            ctx.rect(path[0][0], path[0][1], width, height);
-            ctx.stroke();
-            ctx.fill();
+        ctx.rect(path[0][0], path[0][1], width, height);
+        ctx.stroke();
+        ctx.fill();
 
-            ctx.closePath();
-            break;
-        }
+        ctx.closePath();
+        break;
+      }
 
-        default:
-            break;
+      default:
+        break;
     }
 
     copyCanvasToSmall();
   };
 
   const drawAllMoves = async () => {
-    if(!ctx) return;
+    if (!ctx) return;
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     const images = await Promise.all(
-        sortedMoves.filter((move) => move.options.shape === 'image').map((move) => {
-            return new Promise<HTMLImageElement>((resolve) => {
-                const img = new Image();
-                img.src = move.img.base64;
-                img.id = move.id;
-                img.addEventListener('load', () => resolve(img));
-            })
+      sortedMoves
+        .filter((move) => move.options.shape === "image")
+        .map((move) => {
+          return new Promise<HTMLImageElement>((resolve) => {
+            const img = new Image();
+            img.src = move.img.base64;
+            img.id = move.id;
+            img.addEventListener("load", () => resolve(img));
+          });
         })
-    )
+    );
 
-
-  sortedMoves.forEach((move) => {
-    if(move.options.shape === 'image') {
+    sortedMoves.forEach((move) => {
+      if (move.options.shape === "image") {
         const img = images.find((image) => image.id === move.id);
-        if(img) drawMove(move,img);
-    } else drawMove(move);
-  });
+        if (img) drawMove(move, img);
+      } else drawMove(move);
+    });
 
-  copyCanvasToSmall();
-}
+    copyCanvasToSmall();
+  };
 
-useSelection(drawAllMoves);
+  useSelection(drawAllMoves);
 
-useEffect(() => {
-    socket.on('your_move', (move) => {
-        clearOnYourMove();
-        handleAddMyMove(move);
-        setTimeout(clearSelection, 100);
+  useEffect(() => {
+    socket.on("your_move", (move) => {
+      clearOnYourMove();
+      handleAddMyMove(move);
+      setTimeout(clearSelection, 100);
     });
 
     return () => {
-        socket.off('your_move');
+      socket.off("your_move");
     };
-}, [clearOnYourMove, clearSelection, handleAddMyMove]);
+  }, [clearOnYourMove, clearSelection, handleAddMyMove]);
 
-useEffect(() => {
+  useEffect(() => {
     if (prevMovesLength >= sortedMoves.length || !prevMovesLength) {
-        drawAllMoves();
+      drawAllMoves();
     } else {
-        const lastMove = sortedMoves[sortedMoves.length - 1];
+      const lastMove = sortedMoves[sortedMoves.length - 1];
 
-        if(lastMove.options.shape === 'image') {
-            const img = new Image();
-            img.src = lastMove.img.base64;
-            img.addEventListener('load', () => drawMove(lastMove, img));
-        } else drawMove(lastMove);
+      if (lastMove.options.shape === "image") {
+        const img = new Image();
+        img.src = lastMove.img.base64;
+        img.addEventListener("load", () => drawMove(lastMove, img));
+      } else drawMove(lastMove);
     }
 
     return () => {
-        prevMovesLength = sortedMoves.length;
+      prevMovesLength = sortedMoves.length;
     };
-}, [sortedMoves]);
+  }, [sortedMoves]);
 
-const handleUndo = () => {
-    if(ctx) {
-        const move = handleRemoveMyMove();
+  const handleUndo = () => {
+    if (ctx) {
+      const move = handleRemoveMyMove();
 
-        if(move?.options.mode === 'select') clearSelection();
-        else if (move) {
-            addSavedMove(move);
-            socket.emit('undo');
-        }
+      if (move?.options.mode === "select") clearSelection();
+      else if (move) {
+        addSavedMove(move);
+        socket.emit("undo");
+      }
     }
-};
+  };
 
-const handleRedo = () => {
-    if(ctx) {
-        const move = removeSavedMove();
+  const handleRedo = () => {
+    if (ctx) {
+      const move = removeSavedMove();
 
-        if(move) {
-            socket.emit('draw', move);
-        }
+      if (move) {
+        socket.emit("draw", move);
+      }
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     const handleUndoRedoKeyboard = (e: KeyboardEvent) => {
-        if (e.ctrlKey && e.key === 'z') {
-            handleUndo();
-        } else if (e.ctrlKey && e.key === 'y') {
-            handleRedo();
-        }
+      if (e.ctrlKey && e.key === "z") {
+        handleUndo();
+      } else if (e.ctrlKey && e.key === "y") {
+        handleRedo();
+      }
     };
 
-    document.addEventListener('keydown', handleUndoRedoKeyboard);
+    document.addEventListener("keydown", handleUndoRedoKeyboard);
 
     return () => {
-        document.removeEventListener('keydown', handleUndoRedoKeyboard);
+      document.removeEventListener("keydown", handleUndoRedoKeyboard);
     };
-}, [handleUndo, handleRedo]);
+  }, [handleUndo, handleRedo]);
 
-return { handleUndo, handleRedo};
+  return { handleUndo, handleRedo };
 };

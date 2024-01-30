@@ -1,12 +1,10 @@
 import { FormEvent, useEffect, useState } from 'react';
-
 import { useRouter } from 'next/router';
-
 import { socket } from '@/common/lib/socket';
-import { useSetRoomId } from '@/common/redux/room';
-import { useModal } from '@/modules/modal';
+import NotFoundModal from '../../modals/NotFound';
+import { useModal } from '@/modal';
+import { useDispatch, useSelector } from 'react-redux';
 
-import NotFoundModal from '../modals/NotFound';
 
 const Home = () => {
     const { openModal } = useModal();
