@@ -137,7 +137,17 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
             })
         })
     )
-  }
 
 
+  sortedMoves.forEach((move) => {
+    if(move.options.shape === 'image') {
+        const img = images.find((image) => image.id === move.id);
+        if(img) drawMove(move,img);
+    } else drawMove(move);
+  });
+
+  copyCanvasToSmall();
+}
+
+useSelection(drawAllMoves);
 };
