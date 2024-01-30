@@ -7,6 +7,8 @@ import { useSetSelection } from "@/common/recoil/options";
 import { useEffect, useMemo } from "react";
 import { Move } from "@/common/types/global";
 import { getStringFromRgba } from "@/common/lib/rgba";
+import { socket } from "@/common/lib/socket";
+import { useSelection } from "../modules/board/hooks/useSelection";
 
 let prevMovesLength = 0;
 
@@ -150,4 +152,74 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
 }
 
 useSelection(drawAllMoves);
+
+useEffect(() => {
+    socket.on('your_move', (move) => {
+        clearOnYourMove();
+        handleAddMyMove(move);
+        setTimeout(clearSelection, 100);
+    });
+
+    return () => {
+        socket.off('your_move');
+    };
+}, [clearOnYourMove, clearSelection, handleAddMyMove]);
+
+useEffect(() => {
+    if (prevMovesLength >= sortedMoves.length || !prevMovesLength) {
+        drawAllMoves();
+    } else {
+        const lastMove = sortedMoves[sortedMoves.length - 1];
+
+        if(lastMove.options.shape === 'image') {
+            const img = new Image();
+            img.src = lastMove.img.base64;
+            img.addEventListener('load', () => drawMove(lastMove, img));
+        } else drawMove(lastMove);
+    }
+
+    return () => {
+        prevMovesLength = sortedMoves.length;
+    };
+}, [sortedMoves]);
+
+const handleUndo = () => {
+    if(ctx) {
+        const move = handleRemoveMyMove();
+
+        if(move?.options.mode === 'select') clearSelection();
+        else if (move) {
+            addSavedMove(move);
+            socket.emit('undo');
+        }
+    }
+};
+
+const handleRedo = () => {
+    if(ctx) {
+        const move = removeSavedMove();
+
+        if(move) {
+            socket.emit('draw', move);
+        }
+    }
+};
+
+useEffect(() => {
+    const handleUndoRedoKeyboard = (e: KeyboardEvent) => {
+        if (e.ctrlKey && e.key === 'z') {
+            handleUndo();
+        } else if (e.ctrlKey && e.key === 'y') {
+            handleRedo();
+        }
+    };
+
+    document.addEventListener('keydown', handleUndoRedoKeyboard);
+
+    return () => {
+        document.removeEventListener('keydown', handleUndoRedoKeyboard);
+    };
+}, [handleUndo, handleRedo]);
+
+return { handleUndo, handleRedo};
 };
