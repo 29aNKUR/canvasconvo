@@ -122,5 +122,22 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
     copyCanvasToSmall();
   };
 
-  
+  const drawAllMoves = async () => {
+    if(!ctx) return;
+
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    const images = await Promise.all(
+        sortedMoves.filter((move) => move.options.shape === 'image').map((move) => {
+            return new Promise<HTMLImageElement>((resolve) => {
+                const img = new Image();
+                img.src = move.img.base64;
+                img.id = move.id;
+                img.addEventListener('load', () => resolve(img));
+            })
+        })
+    )
+  }
+
+
 };
