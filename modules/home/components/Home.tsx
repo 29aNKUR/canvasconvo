@@ -108,7 +108,7 @@ const Home = () => {
         <div className="flex flex-col items-center gap-2">
           <h5 className="self-start font-bold leading-tight">Create new room</h5>
   
-          <button className="btn">
+          <button className="btn" onClick={handleCreateRoom}>
             Create
           </button>
         </div>

@@ -1,6 +1,8 @@
+import type { NextPage } from 'next';
+
 import Home from "@/modules/home";
 
-const HomePage = () => {
+const HomePage: NextPage = () => {
   return <Home />;
 }
 

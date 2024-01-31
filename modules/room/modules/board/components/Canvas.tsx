@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSocketDraw } from "../hooks/useSocketDraw";
 import { useDraw } from "../hooks/useDraw";
 import { useMovesHandlers } from "@/modules/room/hooks/useMovesHandlers";
-import { useDragControls } from "framer-motion";
+import { motion, useDragControls } from "framer-motion";
 import { socket } from "@/common/lib/socket";
 import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 import Background from "./Background";
@@ -95,13 +95,13 @@ const Canvas = () => {
         }}
         onTouchStart={(e) =>
           handleStartDrawing(
-            e.changedTouces[0].clientX,
+            e.changedTouches[0].clientX,
             e.changedTouches[0].clientY
           )
         }
         onTouchEnd={handleEndDrawing}
         onTouchMove={(e) =>
-          handleDraw(e.changedTouches[0].clientX, e.changeTouches[0].clientY)
+          handleDraw(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
         }
       />
 
@@ -109,7 +109,7 @@ const Canvas = () => {
       <Background bgRef={bgRef} />
       <MiniMap dragging={dragging} />
 
-{/* Button to toggle dragging state */}
+      {/* Button to toggle dragging state */}
       <button
         className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
           dragging ? "bg-green-500" : "bg-zinc-300 text-black"

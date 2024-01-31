@@ -53,9 +53,9 @@ html {
   overflow-y: overlay;
 }
 
-#portal {
+/* #portal {
   z-index: 1;
-}
+} */
 
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;

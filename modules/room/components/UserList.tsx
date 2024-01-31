@@ -1,4 +1,5 @@
-import { useRoom } from "@recoil/room";
+import { useRoom } from "@/common/recoil/room";
+
 
 const UserList = () => {
   const { users } = useRoom();

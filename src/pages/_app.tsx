@@ -7,11 +7,11 @@ import Head from "next/head";
 import { ToastContainer } from "react-toastify";
 import { RecoilRoot } from "recoil";
 
-export default function App({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
-        <title>CanvasConvo | Onlie Whiteboard with Chat</title>
+        <title>CanvasConvo | Online Whiteboard with Chat</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <RecoilRoot>
@@ -24,3 +24,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+export default App;
