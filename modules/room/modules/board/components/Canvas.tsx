@@ -95,13 +95,21 @@ const Canvas = () => {
         }}
         onTouchStart={(e) =>
           handleStartDrawing(
+<<<<<<< HEAD
             e.changedTouches[0].clientX,
+=======
+            e.changedTouces[0].clientX,
+>>>>>>> 36e4f05052469ea4e6964d6b328e51d3cbd94ec3
             e.changedTouches[0].clientY
           )
         }
         onTouchEnd={handleEndDrawing}
         onTouchMove={(e) =>
+<<<<<<< HEAD
           handleDraw(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
+=======
+          handleDraw(e.changedTouches[0].clientX, e.changeTouches[0].clientY)
+>>>>>>> 36e4f05052469ea4e6964d6b328e51d3cbd94ec3
         }
       />
 
@@ -109,7 +117,11 @@ const Canvas = () => {
       <Background bgRef={bgRef} />
       <MiniMap dragging={dragging} />
 
+<<<<<<< HEAD
       {/* Button to toggle dragging state */}
+=======
+{/* Button to toggle dragging state */}
+>>>>>>> 36e4f05052469ea4e6964d6b328e51d3cbd94ec3
       <button
         className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
           dragging ? "bg-green-500" : "bg-zinc-300 text-black"
