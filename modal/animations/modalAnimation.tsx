@@ -1,6 +1,6 @@
 export const bgAnimation = {
     closed: { opacity: 0 },
-    opened: { opactity: 1},
+    opened: { opacity: 1},
 };
 
 export const modalAnimation = {

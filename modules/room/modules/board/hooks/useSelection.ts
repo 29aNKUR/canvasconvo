@@ -269,9 +269,9 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
             const copyBtn = selectionRefs.current[1];
             const deleteBtn = selectionRefs.current[2];
 
-            moveBtn.addEventListener('click', handleSelectionMove);
-            copyBtn.addEventListener('click', handleCopy);
-            deleteBtn.addEventListener('click', createDeleteMove);
+            moveBtn?.addEventListener('click', handleSelectionMove);
+            copyBtn?.addEventListener('click', handleCopy);
+            deleteBtn?.addEventListener('click', createDeleteMove);
 
             // Detach event listeners on cleanup    
             return () => {

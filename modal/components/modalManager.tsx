@@ -13,23 +13,28 @@ const ModalManager = () => {
   const [{ opened, modal }, setModal] = useRecoilState(modalAtom);
 
   useEffect(() => {
-    const node = document.getElementById("portal");
-    if (node) setPortalNode(node);
-  }, []);
+    if(!portalNode) {
+      const node = document.getElementById("portal");
+      if (node) setPortalNode(node);
+      return;
+    }
 
-  const closeAndStopPropagation = () => {
-    setModal({ modal: <></>, opened: false });
-  };
+    if (opened) {
+      portalNode.style.pointerEvents = 'all';
+    } else {
+      portalNode.style.pointerEvents = 'none';
+    }   
+  }, [portalNode]);
 
   return (
     <div>
       {opened && (
         <motion.div
           className="absolute z-40 flex min-h-full w-full items-center justify-center bg-black/80"
+          onClick={() => setModal({ modal: <></>, opened: false})}
           variants={bgAnimation}
-          onClick={closeAndStopPropagation}
           initial="closed"
-          animate="opened"
+          animate={opened ? 'opened' : 'closed'}
         >
           <AnimatePresence>
             {opened && (
