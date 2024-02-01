@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { socket } from '@/common/lib/socket';
 import NotFoundModal from '../../modals/NotFound';
 import { useModal } from '@/modal';
-import { useDispatch, useSelector } from 'react-redux';
 import { useSetRoomId } from '@/common/recoil/room';
 
 
