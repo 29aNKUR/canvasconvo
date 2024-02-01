@@ -84,7 +84,13 @@ const Canvas = () => {
           if (e.button === 2) {
             setDragging(true);
             dragControls.start(e as unknown as PointerEvent);
+<<<<<<< HEAD
           } else handleStartDrawing(e.clientX, e.clientY);
+=======
+          } else {
+            handleStartDrawing(e.clientX, e.clientY);
+          }
+>>>>>>> 1c59ac29bc76532f404c1a1510a0ba99f3aad29e
         }}
         onMouseUp={(e) => {
           if (e.button === 2) setDragging(false);
