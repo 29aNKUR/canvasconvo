@@ -17,7 +17,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       </Head>
       <RecoilRoot>
         <ToastContainer />
-        <MotionConfig transition={{ ease: DEFAULT_EASE }}>
+        <MotionConfig>
           <ModalManager />
           <Component {...pageProps} />
         </MotionConfig>
