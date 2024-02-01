@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 
 
+
 const Portal = ({ children }: {children: JSX.Element | JSX.Element[] }) => {
 
     const portal = document.getElementById('portal');
