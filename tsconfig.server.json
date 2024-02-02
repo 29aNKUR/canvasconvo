@@ -6,7 +6,8 @@
     "target": "es2017",
     "isolatedModules": false,
     "noEmit": false,
-    "types": ["node", "express", "uuid"]  // Add these lines
+    "typeRoots": ["node_modules/@types", "types"],
+    "types": ["express", "uuid"]
   },
   "include": ["server"]
 }
