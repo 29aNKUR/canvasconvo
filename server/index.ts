@@ -23,9 +23,9 @@ nextApp.prepare().then(() => {
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 
-  app.get('/hello', async (_, res) => {
-    res.send("hello world");
-  });
+  // app.get('/hello', async (_, res) => {
+  //   res.send("hello world");
+  // });
 
   const rooms = new Map<string, Room>();
 
