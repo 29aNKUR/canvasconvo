@@ -1,3 +1,6 @@
-command = "npm run build"
-publish = "build"
-functions = "lambda"
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[functions]
+  directory = "lambda"
