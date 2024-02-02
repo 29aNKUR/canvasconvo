@@ -1,12 +1,12 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-      "module": "commonjs",
-      "outDir": "build",
-      "target": "es2017",
-      "isolatedModules": false,
-      "noEmit": false
-    },
-    "include": ["server"]
-  }
-  
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "build",
+    "target": "es2017",
+    "isolatedModules": false,
+    "noEmit": false,
+    "types": ["node"]  // Add this line
+  },
+  "include": ["server"]
+}
