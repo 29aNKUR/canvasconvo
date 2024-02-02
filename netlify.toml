@@ -1,6 +1,5 @@
 [build]
-  command = "npm run build"
-  publish = "build"
-
-[functions]
-  directory = "lambda"
+command = "npm run build"
+publish = "/opt/build/repo/build"
+functions = "/opt/build/repo/lambda"
+node_version = "20.9.0"
