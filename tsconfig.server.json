@@ -4,8 +4,10 @@
     "module": "commonjs",
     "outDir": "build",
     "target": "es2017",
+    "isolatedModules": false,
     "noEmit": false,
-    "types": ["node"]
+    "typeRoots": ["node_modules/@types", "types"],
+    "types": ["express", "uuid"]
   },
   "include": ["server"]
 }
