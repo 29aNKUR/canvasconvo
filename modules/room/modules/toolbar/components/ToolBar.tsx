@@ -36,23 +36,24 @@ const ToolBar = () => {
 
   // Event handler to download the canvas as an image
   const handleDownload = () => {
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = CANVAS_SIZE.width;
     canvas.height = CANVAS_SIZE.height;
 
     // Drawing canvas and background onto the temporary canvas
     //bgRef is for background canvas(white grid with horizontal and vertical lines)
     //canvasRef is for images,drawings created by the user on the background
-    const tempCtx = canvas.getContext("2d");
+    const tempCtx = canvas.getContext('2d');
+
     if (tempCtx && canvasRef.current && bgRef.current) {
       tempCtx.drawImage(bgRef.current, 0, 0);
       tempCtx.drawImage(canvasRef.current, 0, 0);
     }
 
     // Creating a download link and triggering a click to initiate download
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "canvas.png";
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = 'canvas.png';
     link.click();
   };
 

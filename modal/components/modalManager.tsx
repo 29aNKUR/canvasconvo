@@ -24,11 +24,10 @@ const ModalManager = () => {
     } else {
       portalNode.style.pointerEvents = 'none';
     }   
-  }, [portalNode]);
+  }, [opened, portalNode]);
 
   return (
-    <div>
-      {opened && (
+    <Portal>
         <motion.div
           className="absolute z-40 flex min-h-full w-full items-center justify-center bg-black/80"
           onClick={() => setModal({ modal: <></>, opened: false})}
@@ -51,8 +50,7 @@ const ModalManager = () => {
             )}
           </AnimatePresence>
         </motion.div>
-      )}
-    </div>
+    </Portal>
   );
 };
 
