@@ -5,8 +5,7 @@
     "outDir": "build",
     "target": "es2017",
     "isolatedModules": false,
-    "noEmit": false,
-    "typeRoots": ["node_modules/@types", "types"]
+    "noEmit": false
   },
   "include": ["server"]
 }
