@@ -5,7 +5,9 @@
     "outDir": "build",
     "target": "es2017",
     "isolatedModules": false,
-    "noEmit": false
+    "noEmit": false,
+    "typeRoots": ["node_modules/@types", "types"],
+    "types": ["express", "uuid"]
   },
   "include": ["server"]
 }
