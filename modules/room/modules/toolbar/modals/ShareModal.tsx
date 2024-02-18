@@ -13,6 +13,7 @@ const ShareModal = () => {
     useEffect(() => setUrl(window.location.href), []);
 
     //uses Clipboard API, a part of Web APIs
+    //nice
     const handleCopy = () => navigator.clipboard.writeText(url);
 
     return (
